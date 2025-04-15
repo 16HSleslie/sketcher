@@ -15,7 +15,23 @@ export class UploadService {
    * Get auth headers with the token
    */
   private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('admin_token');
+    
+    // Debug any issues with token
+    if (!token || token.startsWith('admin-token-')) {
+      console.error('Invalid or development token detected:', token);
+      
+      // In real applications you would handle this differently
+      // This is just for debugging the current issue
+      if (environment.production === false) {
+        // Try to redirect to login or refresh the token
+        if (confirm('Authentication token is invalid. Would you like to go to the login page to refresh your session?')) {
+          window.location.href = '/admin/login';
+          return new HttpHeaders();
+        }
+      }
+    }
+    
     return new HttpHeaders({
       'x-auth-token': token || ''
     });

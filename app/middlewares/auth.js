@@ -2,17 +2,28 @@ const jwt = require('jsonwebtoken');
 const config = require('../../config');
 
 module.exports = function(req, res, next) {
-  // Get token from header
-  const token = req.header('x-auth-token');
+  // Get token from header or query params or cookie
+  const token = req.header('x-auth-token') || req.query.token || (req.cookies && req.cookies['auth-token']);
+
+  // Log the token for debugging
+  console.log('Auth middleware called, token:', token ? `${token.substring(0, 15)}...` : 'No token');
 
   // Check if no token
   if (!token) {
+    console.log('Auth failed: No token provided');
     return res.status(401).json({ msg: 'No token, authorization denied' });
+  }
+
+  // Reject clearly invalid tokens
+  if (token === 'admin-token-1744601683242' || token.startsWith('admin-token-')) {
+    console.log('Auth failed: Using invalid hardcoded token');
+    return res.status(401).json({ msg: 'Invalid token format' });
   }
 
   try {
     // Verify token
     const decoded = jwt.verify(token, config.JWT_SECRET);
+    console.log('Token verified for:', decoded.admin ? 'admin' : 'user');
 
     // Add admin and user from payload to request
     // This handles both admin and user tokens for broader compatibility
@@ -28,6 +39,7 @@ module.exports = function(req, res, next) {
     
     next();
   } catch (err) {
+    console.log('Auth failed: Invalid token -', err.message);
     res.status(401).json({ msg: 'Token is not valid' });
   }
 }; 

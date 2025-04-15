@@ -65,6 +65,9 @@ router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
 
+    // For debugging purposes
+    console.log('Login attempt:', { username });
+
     // Check if admin exists
     const admin = await Admin.findOne({ username });
     if (!admin) {
@@ -94,11 +97,19 @@ router.post('/login', async (req, res) => {
       { expiresIn: '1d' },
       (err, token) => {
         if (err) throw err;
+        // Set CORS headers to ensure browser can handle the response
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, x-auth-token');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+        
+        // For debugging
+        console.log('Login successful for:', admin.username);
+        
         res.json({ token });
       }
     );
   } catch (err) {
-    console.error(err.message);
+    console.error('Login error:', err.message);
     res.status(500).send('Server error');
   }
 });

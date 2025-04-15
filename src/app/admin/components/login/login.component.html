@@ -42,6 +42,15 @@
         <span *ngIf="!isLoading">Login</span>
         <span *ngIf="isLoading">Logging in...</span>
       </button>
+      
+      <!-- Development mode button, only shown in non-production -->
+      <button 
+        *ngIf="!isProd" 
+        type="button" 
+        (click)="loginWithDevToken()" 
+        class="dev-login-button">
+        Login with Dev Token
+      </button>
     </form>
     
     <div class="login-footer">

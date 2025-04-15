@@ -28,11 +28,17 @@ export class AdminAuthService {
   constructor(private http: HttpClient) {}
 
   login(username: string, password: string): Observable<LoginResponse> {
+    console.log('Attempting login for user:', username);
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { username, password })
       .pipe(
         tap(response => {
-          localStorage.setItem(this.TOKEN_KEY, response.token);
-          this.isAuthenticatedSubject.next(true);
+          if (response && response.token) {
+            console.log('Received token from server:', response.token.substring(0, 20) + '...');
+            localStorage.setItem(this.TOKEN_KEY, response.token);
+            this.isAuthenticatedSubject.next(true);
+          } else {
+            console.error('Invalid token received from server');
+          }
         })
       );
   }
@@ -43,7 +49,9 @@ export class AdminAuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    console.log('Retrieved token from localStorage:', token ? (token.substring(0, 20) + '...') : 'null');
+    return token;
   }
 
   isAuthenticated(): boolean {
@@ -56,5 +64,10 @@ export class AdminAuthService {
 
   private hasToken(): boolean {
     return !!localStorage.getItem(this.TOKEN_KEY);
+  }
+  
+  // Manually set authentication state (for development/testing)
+  setAuthenticationState(isAuthenticated: boolean): void {
+    this.isAuthenticatedSubject.next(isAuthenticated);
   }
 } 
