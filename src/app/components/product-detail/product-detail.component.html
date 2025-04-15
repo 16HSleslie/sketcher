@@ -1,0 +1,77 @@
+<div class="product-detail-container">
+  <!-- Back button -->
+  <button class="back-btn" (click)="goBackToShop()">
+    <span>←</span> Back to Shop
+  </button>
+
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Retrieving book details...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error" class="error-container">
+    <p>{{error}}</p>
+    <button (click)="goBackToShop()">Return to Shop</button>
+  </div>
+
+  <!-- Product details -->
+  <div *ngIf="!loading && !error && product" class="product-content">
+    <div class="product-images">
+      <div class="main-image-container">
+        <img *ngIf="currentImage" [src]="currentImage" [alt]="product.name" class="main-image">
+        <div *ngIf="!currentImage" class="no-image">
+          <span>📖</span>
+        </div>
+      </div>
+      
+      <!-- Thumbnail gallery -->
+      <div *ngIf="product.images && product.images.length > 1" class="image-thumbnails">
+        <div 
+          *ngFor="let image of product.images; let i = index" 
+          class="thumbnail-container"
+          [class.active]="i === currentImageIndex"
+          (click)="changeImage(i)">
+          <img [src]="image" [alt]="product.name + ' thumbnail ' + i" class="thumbnail">
+        </div>
+      </div>
+    </div>
+
+    <div class="product-info">
+      <h1 class="product-title">{{product.name}}</h1>
+      
+      <div class="product-price-container">
+        <span class="product-price">${{product.price.toFixed(2)}}</span>
+        <span *ngIf="product.stock > 0" class="stock-status available">In Stock</span>
+        <span *ngIf="product.stock === 0" class="stock-status unavailable">Out of Stock</span>
+      </div>
+      
+      <div class="dragon-divider">
+        <span class="divider-line"></span>
+        <span class="dragon-icon">🐉</span>
+        <span class="divider-line"></span>
+      </div>
+      
+      <p class="product-description">{{product.description}}</p>
+      
+      <div class="product-meta">
+        <div class="meta-item">
+          <span class="meta-label">Category:</span>
+          <span class="meta-value">{{product.category}}</span>
+        </div>
+      </div>
+      
+      <button 
+        [disabled]="product.stock === 0" 
+        class="add-to-cart-btn"
+        [class.disabled]="product.stock === 0">
+        Add to Cart
+      </button>
+      
+      <div class="handcrafted-note">
+        <p>Each book is lovingly handcrafted with care, making every piece unique with its own character and charm.</p>
+      </div>
+    </div>
+  </div>
+</div> 

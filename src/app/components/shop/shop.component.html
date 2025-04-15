@@ -1,0 +1,75 @@
+<div class="shop-container">
+  <div class="shop-header">
+    <div class="hero-content">
+      <h1 class="title">Lily's Handcrafted Books</h1>
+      <p class="subtitle">Each book is lovingly crafted by hand, with attention to every detail</p>
+    </div>
+  </div>
+
+  <div class="category-filter">
+    <div class="filter-header">
+      <h3>Categories</h3>
+      <div class="dragon-divider">
+        <span class="divider-line"></span>
+        <span class="dragon-icon">🐉</span>
+        <span class="divider-line"></span>
+      </div>
+    </div>
+    <div class="category-buttons">
+      <button 
+        class="category-btn" 
+        [class.active]="!selectedCategory" 
+        (click)="filterByCategory(null)">
+        All Books
+      </button>
+      <button 
+        *ngFor="let category of categories" 
+        class="category-btn" 
+        [class.active]="selectedCategory === category" 
+        (click)="filterByCategory(category)">
+        {{category}}
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Gathering books from the shelf...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error" class="error-container">
+    <p>{{error}}</p>
+    <button (click)="loadProducts()">Try Again</button>
+  </div>
+
+  <!-- Products grid -->
+  <div *ngIf="!loading && !error" class="products-grid">
+    <div *ngFor="let product of filteredProducts" class="product-card">
+      <div class="product-image-container" [routerLink]="['/product', product._id]">
+        <img *ngIf="product.images && product.images.length" 
+          [src]="product.images[0]" 
+          [alt]="product.name" 
+          class="product-image">
+        <div *ngIf="!product.images || !product.images.length" class="no-image">
+          <span>📖</span>
+        </div>
+      </div>
+      <div class="product-details">
+        <h3 class="product-name" [routerLink]="['/product', product._id]">{{product.name}}</h3>
+        <p class="product-description">{{product.description}}</p>
+        <div class="product-footer">
+          <span class="product-price">${{product.price.toFixed(2)}}</span>
+          <button class="add-to-cart-btn" (click)="addToCart(product)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading && !error && filteredProducts.length === 0" class="empty-container">
+    <p>No books found in this category</p>
+    <button (click)="selectedCategory = null">View All Books</button>
+  </div>
+</div> 

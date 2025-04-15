@@ -8,15 +8,22 @@ import { AppComponent } from './app.component';
 import { AdminModule } from './admin/admin.module';
 import { AuthInterceptor } from './admin/interceptors/auth.interceptor';
 
-// New components
+// Components
 import { HomeComponent } from './components/home/home.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { UploadComponent } from './components/upload/upload.component';
+import { ShopComponent } from './components/shop/shop.component';
+import { ProductDetailComponent } from './components/product-detail/product-detail.component';
+
+// Services
 import { AssetService } from './services/asset.service';
+import { ProductService } from './services/product.service';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
+  { path: 'shop', component: ShopComponent },
+  { path: 'product/:id', component: ProductDetailComponent },
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
   { path: '**', redirectTo: '' }
 ];
@@ -27,7 +34,9 @@ const routes: Routes = [
     HomeComponent,
     HeaderComponent,
     FooterComponent,
-    UploadComponent
+    UploadComponent,
+    ShopComponent,
+    ProductDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -39,7 +48,8 @@ const routes: Routes = [
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    AssetService
+    AssetService,
+    ProductService
   ],
   bootstrap: [AppComponent]
 })
