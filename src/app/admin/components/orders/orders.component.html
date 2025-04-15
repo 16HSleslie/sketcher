@@ -1,0 +1,359 @@
+<div class="admin-container">
+  <!-- Sidebar Navigation -->
+  <div class="admin-sidebar">
+    <div class="sidebar-header">
+      <h1>Lily's Bookbinding</h1>
+      <h2>Admin Portal</h2>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+        <i class="nav-icon dashboard-icon"></i>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/admin/products" routerLinkActive="active" class="nav-item">
+        <i class="nav-icon products-icon"></i>
+        <span>Products</span>
+      </a>
+      <a routerLink="/admin/orders" routerLinkActive="active" class="nav-item">
+        <i class="nav-icon orders-icon"></i>
+        <span>Orders</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="admin-content">
+    <div class="content-header">
+      <h1>Order Management</h1>
+      <div class="content-actions">
+        <button class="refresh-button" (click)="loadOrders()" [disabled]="isLoading">
+          <i class="refresh-icon"></i>
+          <span>Refresh</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Filters -->
+    <div class="filters-container">
+      <div class="search-container">
+        <input 
+          type="text" 
+          placeholder="Search by name, email or order ID..." 
+          class="search-input"
+          (input)="onSearch($event)"
+        >
+      </div>
+      
+      <div class="status-filters">
+        <button 
+          class="filter-button" 
+          [class.active]="statusFilter === 'all'"
+          (click)="onStatusFilterChange('all')"
+        >
+          All
+        </button>
+        <button 
+          class="filter-button" 
+          [class.active]="statusFilter === 'pending'"
+          (click)="onStatusFilterChange('pending')"
+        >
+          Pending
+        </button>
+        <button 
+          class="filter-button" 
+          [class.active]="statusFilter === 'processing'"
+          (click)="onStatusFilterChange('processing')"
+        >
+          Processing
+        </button>
+        <button 
+          class="filter-button" 
+          [class.active]="statusFilter === 'shipped'"
+          (click)="onStatusFilterChange('shipped')"
+        >
+          Shipped
+        </button>
+        <button 
+          class="filter-button" 
+          [class.active]="statusFilter === 'delivered'"
+          (click)="onStatusFilterChange('delivered')"
+        >
+          Delivered
+        </button>
+        <button 
+          class="filter-button" 
+          [class.active]="statusFilter === 'cancelled'"
+          (click)="onStatusFilterChange('cancelled')"
+        >
+          Cancelled
+        </button>
+      </div>
+    </div>
+    
+    <!-- Orders List -->
+    <div class="orders-container" *ngIf="!isLoading; else loadingTemplate">
+      <table class="data-table" *ngIf="filteredOrders.length > 0; else noOrders">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Payment</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of filteredOrders">
+            <td>{{ order._id?.substring(0, 8) }}...</td>
+            <td>{{ order.customer.name }}</td>
+            <td>{{ order.createdAt | date:'MMM d, y' }}</td>
+            <td>
+              <span class="tag" [class.custom-tag]="order.isCustomOrder">
+                {{ order.isCustomOrder ? 'Custom' : 'Standard' }}
+              </span>
+            </td>
+            <td>${{ order.total.toFixed(2) }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="order.status">
+                {{ order.status }}
+              </span>
+            </td>
+            <td>
+              <span class="payment-badge" [ngClass]="order.paymentStatus">
+                {{ order.paymentStatus }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button class="action-button view-button" (click)="viewOrderDetails(order)">
+                <i class="view-icon"></i>
+                <span>View</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <ng-template #noOrders>
+        <div class="empty-state">
+          <div class="empty-icon"></div>
+          <h3>No Orders Found</h3>
+          <p>There are no orders matching your current filters.</p>
+        </div>
+      </ng-template>
+    </div>
+    
+    <ng-template #loadingTemplate>
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading orders...</p>
+      </div>
+    </ng-template>
+    
+    <!-- Order Details Modal -->
+    <div class="modal-overlay" *ngIf="selectedOrder" (click)="closeOrderDetails()">
+      <div class="modal-container" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Order Details</h2>
+          <button class="close-button" (click)="closeOrderDetails()">×</button>
+        </div>
+        
+        <div class="modal-body">
+          <!-- Order Summary -->
+          <div class="order-summary">
+            <div class="summary-item">
+              <span class="summary-label">Order ID:</span>
+              <span class="summary-value">{{ selectedOrder._id }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Order Date:</span>
+              <span class="summary-value">{{ selectedOrder.createdAt | date:'MMM d, y, h:mm a' }}</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Order Type:</span>
+              <span class="summary-value">
+                <span class="tag" [class.custom-tag]="selectedOrder.isCustomOrder">
+                  {{ selectedOrder.isCustomOrder ? 'Custom Order' : 'Standard Order' }}
+                </span>
+              </span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Total:</span>
+              <span class="summary-value">${{ selectedOrder.total.toFixed(2) }}</span>
+            </div>
+          </div>
+          
+          <!-- Customer Info -->
+          <div class="section-card">
+            <h3 class="section-title">Customer Information</h3>
+            <div class="customer-info">
+              <div class="info-row">
+                <span class="info-label">Name:</span>
+                <span class="info-value">{{ selectedOrder.customer.name }}</span>
+              </div>
+              <div class="info-row">
+                <span class="info-label">Email:</span>
+                <span class="info-value">{{ selectedOrder.customer.email }}</span>
+              </div>
+              <div class="info-row" *ngIf="selectedOrder.customer.phone">
+                <span class="info-label">Phone:</span>
+                <span class="info-value">{{ selectedOrder.customer.phone }}</span>
+              </div>
+            </div>
+            
+            <div class="address-info" *ngIf="selectedOrder.customer.address">
+              <h4>Shipping Address</h4>
+              <p>{{ selectedOrder.customer.address.street }}</p>
+              <p>{{ selectedOrder.customer.address.city }}, {{ selectedOrder.customer.address.state }} {{ selectedOrder.customer.address.zipCode }}</p>
+              <p>{{ selectedOrder.customer.address.country }}</p>
+            </div>
+          </div>
+          
+          <!-- Order Items -->
+          <div class="section-card" *ngIf="!selectedOrder.isCustomOrder && selectedOrder.items.length > 0">
+            <h3 class="section-title">Order Items</h3>
+            <table class="items-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of selectedOrder.items">
+                  <td>{{ item.product }}</td>
+                  <td>${{ item.price.toFixed(2) }}</td>
+                  <td>{{ item.quantity }}</td>
+                  <td>${{ (item.price * item.quantity).toFixed(2) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- Custom Order Details -->
+          <div class="section-card" *ngIf="selectedOrder.isCustomOrder && selectedOrder.customOrderDetails">
+            <h3 class="section-title">Custom Order Details</h3>
+            <div class="custom-details">
+              <div class="detail-row">
+                <span class="detail-label">Specifications:</span>
+                <p class="detail-value">{{ selectedOrder.customOrderDetails.specifications }}</p>
+              </div>
+              
+              <div class="detail-row" *ngIf="selectedOrder.customOrderDetails.requiredMaterials">
+                <span class="detail-label">Required Materials:</span>
+                <p class="detail-value">{{ selectedOrder.customOrderDetails.requiredMaterials }}</p>
+              </div>
+              
+              <div class="detail-row" *ngIf="selectedOrder.customOrderDetails.estimatedCompletionTime">
+                <span class="detail-label">Estimated Completion:</span>
+                <p class="detail-value">{{ selectedOrder.customOrderDetails.estimatedCompletionTime }}</p>
+              </div>
+              
+              <div class="detail-row" *ngIf="selectedOrder.customOrderDetails.additionalNotes">
+                <span class="detail-label">Additional Notes:</span>
+                <p class="detail-value">{{ selectedOrder.customOrderDetails.additionalNotes }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Order Status -->
+          <div class="section-card">
+            <h3 class="section-title">Order Status</h3>
+            <div class="status-section">
+              <div class="status-row">
+                <span class="status-label">Current Status:</span>
+                <span class="status-badge" [ngClass]="selectedOrder.status">
+                  {{ selectedOrder.status }}
+                </span>
+              </div>
+              
+              <div class="status-row">
+                <span class="status-label">Payment Status:</span>
+                <span class="payment-badge" [ngClass]="selectedOrder.paymentStatus">
+                  {{ selectedOrder.paymentStatus }}
+                </span>
+              </div>
+              
+              <div class="status-row" *ngIf="selectedOrder.trackingNumber">
+                <span class="status-label">Tracking Number:</span>
+                <span class="tracking-value">{{ selectedOrder.trackingNumber }}</span>
+              </div>
+            </div>
+            
+            <!-- Status Update Form -->
+            <div class="status-update-form">
+              <h4>Update Order Status</h4>
+              
+              <div class="status-buttons">
+                <button 
+                  *ngIf="selectedOrder.status !== 'pending'"
+                  class="status-button pending-button" 
+                  (click)="updateOrderStatus(selectedOrder._id!, 'pending')"
+                >
+                  Set as Pending
+                </button>
+                
+                <button 
+                  *ngIf="selectedOrder.status !== 'processing'"
+                  class="status-button processing-button" 
+                  (click)="updateOrderStatus(selectedOrder._id!, 'processing')"
+                >
+                  Set as Processing
+                </button>
+                
+                <button 
+                  *ngIf="selectedOrder.status !== 'shipped'"
+                  class="status-button shipped-button" 
+                  (click)="updateOrderStatus(selectedOrder._id!, 'shipped')"
+                >
+                  Set as Shipped
+                </button>
+                
+                <button 
+                  *ngIf="selectedOrder.status !== 'delivered'"
+                  class="status-button delivered-button" 
+                  (click)="updateOrderStatus(selectedOrder._id!, 'delivered')"
+                >
+                  Set as Delivered
+                </button>
+                
+                <button 
+                  *ngIf="selectedOrder.status !== 'cancelled'"
+                  class="status-button cancelled-button" 
+                  (click)="updateOrderStatus(selectedOrder._id!, 'cancelled')"
+                >
+                  Cancel Order
+                </button>
+              </div>
+              
+              <!-- Tracking Number Input -->
+              <div class="tracking-input-container" *ngIf="selectedOrder.status === 'processing' || selectedOrder.status === 'shipped'">
+                <h4>Add Tracking Number</h4>
+                <div class="tracking-input-row">
+                  <input 
+                    type="text" 
+                    placeholder="Enter tracking number..." 
+                    #trackingInput
+                    [value]="selectedOrder.trackingNumber || ''"
+                    class="tracking-input"
+                  >
+                  <button 
+                    class="action-button" 
+                    (click)="addTrackingNumber(selectedOrder._id!, trackingInput.value)"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

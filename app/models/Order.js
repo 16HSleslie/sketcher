@@ -89,7 +89,10 @@ const OrderSchema = new Schema({
   updatedAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  trackingNumber: {
+    type: String
+  },
 });
 
 module.exports = mongoose.model('Order', OrderSchema); 

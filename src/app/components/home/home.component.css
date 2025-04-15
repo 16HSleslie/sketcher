@@ -1,0 +1,267 @@
+/* Global styles for the homepage */
+.homepage-container {
+  font-family: 'Lato', sans-serif;
+  color: #4a4a4a;
+  line-height: 1.6;
+}
+
+h1, h2, h3 {
+  font-family: 'Cinzel', serif;
+  color: #3a2f2b;
+}
+
+section {
+  padding: 5rem 2rem;
+}
+
+/* Hero Section */
+.hero {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/assets/images/hero-background.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: white;
+  text-align: center;
+  padding: 8rem 2rem;
+  position: relative;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  margin-bottom: 1rem;
+  color: #fff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.tagline {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+.cta-button {
+  background-color: #7b5d4f;
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  font-family: 'Cinzel', serif;
+}
+
+.cta-button:hover {
+  background-color: #614940;
+}
+
+/* About Section */
+.about {
+  background-color: #f9f7f4;
+}
+
+.about-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about h2 {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.about-layout {
+  display: flex;
+  gap: 4rem;
+  align-items: center;
+}
+
+.about-text {
+  flex: 1;
+}
+
+.about-image {
+  flex: 1;
+}
+
+.about-image img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Featured Works Section */
+.featured-works {
+  text-align: center;
+}
+
+.featured-works h2 {
+  margin-bottom: 3rem;
+}
+
+.works-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.work-item {
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.work-item:hover {
+  transform: translateY(-10px);
+}
+
+.work-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.work-item h3 {
+  margin: 1rem 0 0.5rem;
+  padding: 0 1rem;
+}
+
+.work-item p {
+  padding: 0 1rem 1.5rem;
+  color: #666;
+}
+
+/* Process Section */
+.process {
+  background-color: #f9f7f4;
+  text-align: center;
+}
+
+.process h2 {
+  margin-bottom: 3rem;
+}
+
+.process-steps {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.process-step {
+  flex: 1;
+  min-width: 250px;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.step-number {
+  width: 50px;
+  height: 50px;
+  background-color: #7b5d4f;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto 1.5rem;
+  font-family: 'Cinzel', serif;
+}
+
+/* Testimonials Section */
+.testimonials {
+  text-align: center;
+}
+
+.testimonials h2 {
+  margin-bottom: 3rem;
+}
+
+.testimonial {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.testimonial p {
+  font-style: italic;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.client-name {
+  font-weight: bold;
+  color: #7b5d4f;
+}
+
+/* Contact CTA Section */
+.contact-cta {
+  background-color: #7b5d4f;
+  color: white;
+  text-align: center;
+  padding: 5rem 2rem;
+}
+
+.contact-cta h2 {
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.contact-cta p {
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  font-size: 1.2rem;
+}
+
+.contact-cta .cta-button {
+  background-color: white;
+  color: #7b5d4f;
+  font-weight: bold;
+}
+
+.contact-cta .cta-button:hover {
+  background-color: #f2f2f2;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .about-layout {
+    flex-direction: column;
+  }
+  
+  .process-steps {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  
+  .tagline {
+    font-size: 1.2rem;
+  }
+  
+  section {
+    padding: 3rem 1.5rem;
+  }
+} 

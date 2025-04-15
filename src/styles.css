@@ -1,3 +1,177 @@
+/* Global Styles for Lily's Bookbinding Admin */
+
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #5c4a38;
+  background-color: #f8f5f0;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Cinzel', serif;
+  color: #5c4a38;
+}
+
+/* Rustic Color Palette */
+:root {
+  --primary: #8b6c4f;
+  --primary-dark: #5c4a38;
+  --primary-light: #a38868;
+  --accent: #d0c8b5;
+  --background: #f8f5f0;
+  --background-alt: #f0e6d7;
+  --text: #5c4a38;
+  --text-light: #8b6c4f;
+  --success: #2ca12c;
+  --warning: #d4a72c;
+  --danger: #a64452;
+  --white: #ffffff;
+}
+
+/* Common Utility Classes */
+.rustic-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.rustic-card {
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  border: 1px solid var(--background-alt);
+}
+
+.rustic-button {
+  display: inline-block;
+  padding: 0.6rem 1rem;
+  background-color: var(--primary);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.rustic-button:hover {
+  background-color: var(--primary-dark);
+}
+
+.rustic-button.secondary {
+  background-color: var(--background-alt);
+  color: var(--primary);
+  border: 1px solid var(--accent);
+}
+
+.rustic-button.secondary:hover {
+  background-color: #e6d9c2;
+}
+
+/* Global Form Styles */
+.rustic-form-control {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  background-color: var(--background);
+  color: var(--text);
+  transition: all 0.3s;
+}
+
+.rustic-form-control:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(139, 108, 79, 0.15);
+}
+
+/* Status Colors */
+.status-pending {
+  background-color: #fff8e6;
+  color: #d4a72c;
+}
+
+.status-processing {
+  background-color: #e6f7ff;
+  color: #2c8fd4;
+}
+
+.status-shipped {
+  background-color: #e6ffe6;
+  color: #2ca12c;
+}
+
+.status-delivered {
+  background-color: #e6ffe6;
+  color: #2ca12c;
+}
+
+.status-cancelled {
+  background-color: #ffe6e6;
+  color: #d42c2c;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Utility Classes */
+.text-center {
+  text-align: center;
+}
+
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 1rem; }
+.mt-4 { margin-top: 1.5rem; }
+.mt-5 { margin-top: 2rem; }
+
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 1rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mb-5 { margin-bottom: 2rem; }
+
+/* Layout */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 1rem; }
+.gap-4 { gap: 1.5rem; }
+.gap-5 { gap: 2rem; }
+
 /* Global styles */
 body {
   background-color: #f8f9fa;

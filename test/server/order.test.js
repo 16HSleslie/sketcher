@@ -4,10 +4,38 @@ const app = require('../../server');
 const Order = require('../../app/models/Order');
 const Product = require('../../app/models/Product');
 const Admin = require('../../app/models/Admin');
+const { getAdminToken } = require('./helpers/auth-helper');
+const { generateProductData } = require('./helpers/test-data');
 
 let adminToken;
 let productId;
 let orderId;
+
+// Setup before tests
+beforeAll(async () => {
+  // Get admin token first
+  adminToken = await getAdminToken(app);
+  
+  // Create a test product
+  const productData = generateProductData({
+    name: 'Test Product',
+    description: 'This is a test product for orders',
+    price: 49.99,
+    category: 'Test Category', 
+    stock: 20,
+    images: ['test-image.jpg']
+  });
+  
+  const productRes = await request(app)
+    .post('/api/products')
+    .set('x-auth-token', adminToken)
+    .send(productData);
+  
+  if (productRes.statusCode === 200) {
+    productId = productRes.body._id;
+    console.log('Created test product for orders with ID:', productId);
+  }
+});
 
 // Cleanup is now handled by the global setup in jest.setup.js
 // No need for manual connection closing
@@ -49,6 +77,7 @@ describe('Order API', () => {
       
       // Save order ID for future tests
       orderId = res.body._id;
+      console.log('Created test order with ID:', orderId);
     });
     
     it('should create a new custom order', async () => {

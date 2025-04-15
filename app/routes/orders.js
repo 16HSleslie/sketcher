@@ -102,7 +102,7 @@ router.post('/custom', async (req, res) => {
 // @access  Private (Admin only)
 router.put('/:id', auth, async (req, res) => {
   try {
-    const { status, paymentStatus } = req.body;
+    const { status, paymentStatus, trackingNumber } = req.body;
     
     const order = await Order.findById(req.params.id);
     
@@ -110,13 +110,20 @@ router.put('/:id', auth, async (req, res) => {
       return res.status(404).json({ msg: 'Order not found' });
     }
     
+    const updateData = { 
+      status: status || order.status,
+      paymentStatus: paymentStatus || order.paymentStatus,
+      updatedAt: Date.now()
+    };
+    
+    // Add tracking number if provided
+    if (trackingNumber) {
+      updateData.trackingNumber = trackingNumber;
+    }
+    
     const updatedOrder = await Order.findByIdAndUpdate(
       req.params.id,
-      { 
-        status: status || order.status,
-        paymentStatus: paymentStatus || order.paymentStatus,
-        updatedAt: Date.now()
-      },
+      updateData,
       { new: true }
     );
     

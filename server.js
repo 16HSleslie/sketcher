@@ -24,6 +24,7 @@ app.use('/api/users', require('./app/routes/users'));
 app.use('/api/products', require('./app/routes/products'));
 app.use('/api/orders', require('./app/routes/orders'));
 app.use('/api/admin', require('./app/routes/admin'));
+app.use('/api/uploads', require('./app/routes/uploads'));
 
 // API error handler
 app.use('/api', (err, req, res, next) => {

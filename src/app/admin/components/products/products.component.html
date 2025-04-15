@@ -1,0 +1,289 @@
+<div class="admin-container">
+  <!-- Sidebar Navigation -->
+  <div class="admin-sidebar">
+    <div class="sidebar-header">
+      <h1>Lily's Bookbinding</h1>
+      <h2>Admin Portal</h2>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+        <i class="nav-icon dashboard-icon"></i>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/admin/products" routerLinkActive="active" class="nav-item">
+        <i class="nav-icon products-icon"></i>
+        <span>Products</span>
+      </a>
+      <a routerLink="/admin/orders" routerLinkActive="active" class="nav-item">
+        <i class="nav-icon orders-icon"></i>
+        <span>Orders</span>
+      </a>
+    </nav>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="admin-content">
+    <div class="content-header">
+      <h1>Product Management</h1>
+      <div class="content-actions">
+        <button class="add-button" (click)="addProduct()">
+          <i class="add-icon"></i>
+          <span>Add Product</span>
+        </button>
+        <button class="refresh-button" (click)="loadProducts()" [disabled]="isLoading">
+          <i class="refresh-icon"></i>
+          <span>Refresh</span>
+        </button>
+      </div>
+    </div>
+    
+    <!-- Filters -->
+    <div class="filters-container">
+      <div class="search-container">
+        <input 
+          type="text" 
+          placeholder="Search by name, description, or category..." 
+          class="search-input"
+          (input)="onSearch($event)"
+        >
+      </div>
+      
+      <div class="filter-row">
+        <div class="filter-group">
+          <label>Category:</label>
+          <select class="filter-select" (change)="onCategoryFilterChange($event.target.value)">
+            <option value="all">All Categories</option>
+            <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+          </select>
+        </div>
+        
+        <div class="filter-group">
+          <label>Availability:</label>
+          <select class="filter-select" (change)="onAvailabilityFilterChange($event.target.value)">
+            <option value="all">All</option>
+            <option value="available">Available</option>
+            <option value="unavailable">Unavailable</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Products List -->
+    <div *ngIf="!isLoading && !isAddMode && !isEditMode; else formTemplate">
+      <div class="products-container" *ngIf="filteredProducts.length > 0; else noProducts">
+        <div class="product-card" *ngFor="let product of filteredProducts">
+          <div class="product-image">
+            <img *ngIf="product.images && product.images.length > 0; else noImage" [src]="product.images[0]" alt="{{ product.name }}">
+            <ng-template #noImage>
+              <div class="no-image-placeholder">No Image</div>
+            </ng-template>
+            <div class="product-badge" [class.available]="product.isAvailable" [class.unavailable]="!product.isAvailable">
+              {{ product.isAvailable ? 'Available' : 'Unavailable' }}
+            </div>
+          </div>
+          
+          <div class="product-details">
+            <h3 class="product-name">{{ product.name }}</h3>
+            <div class="product-category">{{ product.category }}</div>
+            <div class="product-price">${{ product.price.toFixed(2) }}</div>
+            
+            <div class="product-stock" [class.low-stock]="product.stock < 5">
+              <span class="stock-label">Stock:</span>
+              <span class="stock-value">{{ product.stock }}</span>
+            </div>
+            
+            <div class="product-actions">
+              <button class="action-button edit-button" (click)="editProduct(product)">
+                <i class="edit-icon"></i>
+                <span>Edit</span>
+              </button>
+              <button class="action-button delete-button" (click)="deleteProduct(product)">
+                <i class="delete-icon"></i>
+                <span>Delete</span>
+              </button>
+            </div>
+            
+            <div class="quick-actions">
+              <div class="stock-update">
+                <button class="stock-button" (click)="updateStock(product, product.stock - 1)" [disabled]="product.stock <= 0">-</button>
+                <span class="stock-count">{{ product.stock }}</span>
+                <button class="stock-button" (click)="updateStock(product, product.stock + 1)">+</button>
+              </div>
+              
+              <button 
+                class="toggle-button" 
+                [class.active]="product.isAvailable"
+                (click)="toggleAvailability(product)"
+              >
+                {{ product.isAvailable ? 'Disable' : 'Enable' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <ng-template #noProducts>
+        <div class="empty-state">
+          <div class="empty-icon"></div>
+          <h3>No Products Found</h3>
+          <p>There are no products matching your current filters.</p>
+          <button class="action-button" (click)="addProduct()">Add New Product</button>
+        </div>
+      </ng-template>
+    </div>
+    
+    <!-- Product Form Template -->
+    <ng-template #formTemplate>
+      <div class="form-container">
+        <div class="form-header">
+          <h2>{{ isAddMode ? 'Add New Product' : 'Edit Product' }}</h2>
+          <button class="close-button" (click)="cancelEdit()">×</button>
+        </div>
+        
+        <form [formGroup]="productForm" (ngSubmit)="saveProduct()" class="product-form">
+          <div class="form-group">
+            <label for="name">Product Name *</label>
+            <input 
+              type="text" 
+              id="name" 
+              formControlName="name" 
+              class="form-control"
+              [class.invalid]="hasError('name', 'required') || hasError('name', 'minlength')"
+            >
+            <div class="error-message" *ngIf="hasError('name', 'required')">
+              Name is required
+            </div>
+            <div class="error-message" *ngIf="hasError('name', 'minlength')">
+              Name must be at least 3 characters
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="description">Description *</label>
+            <textarea 
+              id="description" 
+              formControlName="description" 
+              class="form-control textarea"
+              [class.invalid]="hasError('description', 'required') || hasError('description', 'minlength')"
+            ></textarea>
+            <div class="error-message" *ngIf="hasError('description', 'required')">
+              Description is required
+            </div>
+            <div class="error-message" *ngIf="hasError('description', 'minlength')">
+              Description must be at least 10 characters
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="price">Price (USD) *</label>
+              <input 
+                type="number" 
+                id="price" 
+                formControlName="price" 
+                class="form-control"
+                min="0.01"
+                step="0.01"
+                [class.invalid]="hasError('price', 'required') || hasError('price', 'min')"
+              >
+              <div class="error-message" *ngIf="hasError('price', 'required')">
+                Price is required
+              </div>
+              <div class="error-message" *ngIf="hasError('price', 'min')">
+                Price must be greater than 0
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="stock">Stock *</label>
+              <input 
+                type="number" 
+                id="stock" 
+                formControlName="stock" 
+                class="form-control"
+                min="0"
+                step="1"
+                [class.invalid]="hasError('stock', 'required') || hasError('stock', 'min')"
+              >
+              <div class="error-message" *ngIf="hasError('stock', 'required')">
+                Stock is required
+              </div>
+              <div class="error-message" *ngIf="hasError('stock', 'min')">
+                Stock cannot be negative
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="category">Category *</label>
+            <select 
+              id="category" 
+              formControlName="category" 
+              class="form-control"
+              [class.invalid]="hasError('category', 'required')"
+            >
+              <option value="">Select a category</option>
+              <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+            </select>
+            <div class="error-message" *ngIf="hasError('category', 'required')">
+              Category is required
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="images">Product Images</label>
+            <div class="image-upload-container">
+              <div class="upload-button">
+                <label for="imageUpload" class="custom-file-upload">
+                  <i class="upload-icon"></i>
+                  <span>Choose Image</span>
+                </label>
+                <input 
+                  type="file" 
+                  id="imageUpload" 
+                  accept="image/*"
+                  class="file-input" 
+                  (change)="onImageFileSelected($event)"
+                >
+              </div>
+              <div class="image-preview-container" *ngIf="imagePreviewUrls && imagePreviewUrls.length > 0">
+                <div *ngFor="let previewUrl of imagePreviewUrls; let i = index" class="image-preview">
+                  <img [src]="previewUrl" alt="Product image preview">
+                  <button type="button" class="remove-image-button" (click)="removeImage(i)">×</button>
+                </div>
+              </div>
+              <div class="upload-status" *ngIf="uploading">
+                <div class="spinner-small"></div>
+                <span>Uploading image...</span>
+              </div>
+            </div>
+            <div class="image-url-link" *ngIf="productForm.get('images')?.value?.length">
+              <p>{{ productForm.get('images')?.value?.length }} image(s) attached</p>
+            </div>
+          </div>
+          
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" formControlName="isAvailable">
+              <span>Product is available for purchase</span>
+            </label>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="cancel-button" (click)="cancelEdit()">Cancel</button>
+            <button type="submit" class="save-button" [disabled]="productForm.invalid">
+              {{ isAddMode ? 'Add Product' : 'Save Changes' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </ng-template>
+    
+    <!-- Loading Template -->
+    <div class="loading-state" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Loading products...</p>
+    </div>
+  </div>
+</div> 

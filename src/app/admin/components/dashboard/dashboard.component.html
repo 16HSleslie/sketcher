@@ -1,0 +1,155 @@
+<div class="admin-container">
+  <!-- Sidebar Navigation -->
+  <div class="admin-sidebar">
+    <div class="sidebar-header">
+      <h1>Lily's Bookbinding</h1>
+      <h2>Admin Portal</h2>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <a routerLink="/admin/dashboard" routerLinkActive="active" class="nav-item">
+        <i class="nav-icon dashboard-icon"></i>
+        <span>Dashboard</span>
+      </a>
+      <a routerLink="/admin/products" routerLinkActive="active" class="nav-item">
+        <i class="nav-icon products-icon"></i>
+        <span>Products</span>
+      </a>
+      <a routerLink="/admin/orders" routerLinkActive="active" class="nav-item">
+        <i class="nav-icon orders-icon"></i>
+        <span>Orders</span>
+      </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <button (click)="logout()" class="logout-button">
+        <i class="logout-icon"></i>
+        <span>Log Out</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content Area -->
+  <div class="admin-content">
+    <div class="content-header">
+      <h1>Dashboard</h1>
+      <div class="user-info" *ngIf="adminProfile">
+        <span>Welcome, {{ adminProfile.username }}</span>
+      </div>
+    </div>
+    
+    <div class="dashboard-content" *ngIf="!isLoading; else loadingTemplate">
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stats-card">
+          <div class="stats-icon products-icon"></div>
+          <div class="stats-info">
+            <h3>Total Products</h3>
+            <p class="stats-value">{{ stats.totalProducts }}</p>
+          </div>
+        </div>
+        
+        <div class="stats-card">
+          <div class="stats-icon orders-icon"></div>
+          <div class="stats-info">
+            <h3>Total Orders</h3>
+            <p class="stats-value">{{ stats.totalOrders }}</p>
+          </div>
+        </div>
+        
+        <div class="stats-card">
+          <div class="stats-icon pending-icon"></div>
+          <div class="stats-info">
+            <h3>Pending Orders</h3>
+            <p class="stats-value">{{ stats.pendingOrders }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Recent Orders Section -->
+      <div class="dashboard-section">
+        <div class="section-header">
+          <h2>Recent Orders</h2>
+          <a routerLink="/admin/orders" class="view-all">View All</a>
+        </div>
+        
+        <div class="table-container">
+          <table class="data-table" *ngIf="stats.recentOrders.length > 0; else noOrders">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of stats.recentOrders">
+                <td>{{ order._id?.substring(0, 8) }}...</td>
+                <td>{{ order.customer.name }}</td>
+                <td>{{ order.createdAt | date:'MMM d, y' }}</td>
+                <td>${{ order.total.toFixed(2) }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="order.status">
+                    {{ order.status }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #noOrders>
+            <div class="empty-state">
+              <p>No orders found</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+      
+      <!-- Low Stock Products Section -->
+      <div class="dashboard-section">
+        <div class="section-header">
+          <h2>Low Stock Products</h2>
+          <a routerLink="/admin/products" class="view-all">View All</a>
+        </div>
+        
+        <div class="table-container">
+          <table class="data-table" *ngIf="stats.lowStockProducts.length > 0; else noProducts">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Stock</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of stats.lowStockProducts">
+                <td>{{ product.name }}</td>
+                <td>{{ product.category }}</td>
+                <td>
+                  <span class="stock-badge" [ngClass]="{'critical': product.stock < 2}">
+                    {{ product.stock }}
+                  </span>
+                </td>
+                <td>${{ product.price.toFixed(2) }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #noProducts>
+            <div class="empty-state">
+              <p>No low stock products</p>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+    
+    <ng-template #loadingTemplate>
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading dashboard data...</p>
+      </div>
+    </ng-template>
+  </div>
+</div> 

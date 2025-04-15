@@ -1,76 +1,77 @@
-# Testing Strategy Documentation
+# Testing Documentation
 
-This document outlines the testing approach for the Book Bindery application, following best practices from Node.js, MongoDB, and modern testing frameworks.
+This document provides guidelines and best practices for testing in the Book-Bindery application, with special attention to Mongoose/Jest compatibility.
 
-## Testing Hierarchy
+## Test Directory Structure
 
-We use a 3-level testing approach:
+- `test/server/` - Server-side API and model tests
+- `test/server/api/` - API endpoint tests
+- `test/server/unit/` - Unit tests for models and utilities
+- `test/server/integration/` - Integration tests that test multiple components together
+- `src/app/admin/components/*/*.spec.ts` - Angular component tests
 
-1. **Unit Tests** (`/test/server/unit/`)
-   - Test individual modules in isolation
-   - Mock all external dependencies
-   - Focus on data validation, business logic, and edge cases
-   - Fast execution
+## Testing Environment
 
-2. **API Tests** (`/test/server/api/`)
-   - Test public API endpoints
-   - Verify request/response contracts
-   - Test authentication and authorization
-   - Test error handling
+### Server Tests
 
-3. **Integration Tests** (`/test/server/integration/`)
-   - Test interactions between multiple components
-   - Verify workflows and business processes
-   - End-to-end testing of key user journeys
+Server tests run in a Node.js environment with an in-memory MongoDB database provided by `mongodb-memory-server`. This allows for isolated testing without requiring an external MongoDB instance.
 
-## Test Database
+### Client Tests
 
-Tests use a dedicated in-memory MongoDB database (via `mongodb-memory-server`) to ensure:
-- Tests are isolated from production data
-- Each test suite starts with a clean database
-- No need for external database setup
-- Fast execution
+Client tests for Angular components run in a browser-like environment with Jest and `jest-preset-angular`.
+
+## Mongoose with Jest Best Practices
+
+We follow the official Mongoose recommendations for testing with Jest as outlined in [the Mongoose documentation](https://mongoosejs.com/docs/jest.html):
+
+1. **Test Environment**: Server tests use `testEnvironment: 'node'` as recommended by Mongoose, not the default 'jsdom' environment.
+
+2. **Jest Warnings**: We use `SUPPRESS_JEST_WARNINGS=1` to suppress warnings from Mongoose that are safe to ignore.
+
+3. **Timer Functions**: We carefully handle global timer functions (setTimeout, setImmediate) to ensure they're not mocked in a way that would interfere with Mongoose's internal operations.
+
+4. **Connection Handling**: Database connections are properly set up and torn down for each test in `test/setup.js`.
+
+5. **Buffer Commands**: We disable Mongoose's buffer commands feature to prevent Jest from hanging on some operations.
 
 ## Running Tests
 
+### Server Tests
+
 ```bash
-# Run all tests
-npm test
+# Run all server tests
+npm run test:server
 
-# Run only unit tests
-npm run test:unit
+# Run specific server test types
+npm run test:unit  # Model/unit tests
+npm run test:api   # API tests
 
-# Run only API tests
-npm run test:api
-
-# Run tests with code coverage
+# Run with coverage
 npm run test:coverage
 ```
 
-## Test Structure
+### Client Tests
 
-Each test follows the Arrange-Act-Assert (AAA) pattern:
-1. **Arrange**: Set up test data and conditions
-2. **Act**: Perform the action being tested
-3. **Assert**: Verify the results
+```bash
+# Run Angular component tests
+npm run test:client
+```
 
-## Helpers and Utilities
+## Test Database
 
-- `test/setup.js`: Database setup and teardown
-- `test/jest.setup.js`: Global Jest configuration
-- `test/server/helpers/`: Helper functions and test data
+The server tests use `mongodb-memory-server` to create an isolated in-memory MongoDB instance for testing. This approach:
 
-## Best Practices
+- Eliminates the need for an external test database
+- Ensures tests start with a clean state
+- Provides faster test execution
+- Works consistently in CI/CD environments
 
-1. **Isolation**: Tests should not depend on each other
-2. **Speed**: Tests should run quickly
-3. **Maintainability**: Tests should be easy to understand and update
-4. **Coverage**: Aim for high code coverage of critical paths
-5. **Clean setup/teardown**: Each test starts with a clean environment
+## Common Issues and Solutions
 
-## Conventions
+1. **Jest Timer Mocks**: If you need to mock timers for testing purposes, make sure to import Mongoose BEFORE calling `jest.useFakeTimers()`.
 
-- Test files should end with `.test.js`
-- Test files should be organized by type (unit, api, integration)
-- Each test case should test a single behavior
-- Use descriptive test names that explain the expected behavior 
+2. **Connection Issues**: The test setup ensures proper cleanup of database connections between tests. If you encounter connection issues, check that the `teardownDatabase` function is being called properly.
+
+3. **Test Timeouts**: For operations that take longer than the default timeout, use `jest.setTimeout(10000)` to extend the timeout.
+
+4. **Conflicting Libraries**: When adding new packages, ensure they don't interfere with Mongoose's operations or mocking behavior. 

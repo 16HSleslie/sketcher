@@ -1,0 +1,53 @@
+.card {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.card-header {
+  font-weight: bold;
+}
+
+.btn {
+  border-radius: 4px;
+}
+
+.progress {
+  height: 25px;
+  border-radius: 4px;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transition: width 0.3s ease;
+}
+
+.list-group-item {
+  transition: background-color 0.3s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+.btn-group .btn {
+  margin-left: 5px;
+}
+
+input[type="file"] {
+  padding: 10px;
+}
+
+small.text-muted {
+  font-style: italic;
+} 

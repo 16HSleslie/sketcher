@@ -1,0 +1,51 @@
+<div class="login-container">
+  <div class="login-box">
+    <div class="login-header">
+      <h1>Lily's Bookbinding</h1>
+      <h2>Admin Portal</h2>
+    </div>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          formControlName="username" 
+          class="form-control"
+          [ngClass]="{'invalid': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}"
+        >
+        <div class="error-message" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+          Username is required
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          formControlName="password" 
+          class="form-control"
+          [ngClass]="{'invalid': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
+        >
+        <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+          Password is required
+        </div>
+      </div>
+      
+      <div class="error-alert" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+      
+      <button type="submit" [disabled]="loginForm.invalid || isLoading" class="login-button">
+        <span *ngIf="!isLoading">Login</span>
+        <span *ngIf="isLoading">Logging in...</span>
+      </button>
+    </form>
+    
+    <div class="login-footer">
+      <small>&copy; Lily's Bookbinding. All rights reserved.</small>
+    </div>
+  </div>
+</div> 

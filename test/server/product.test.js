@@ -2,10 +2,37 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const app = require('../../server');
 const Product = require('../../app/models/Product');
+const { getAdminToken } = require('./helpers/auth-helper');
+const { generateProductData } = require('./helpers/test-data');
 
 let adminToken;
 let productId;
 
+// Create test product only once before all tests
+beforeAll(async () => {
+  // Get admin token
+  adminToken = await getAdminToken(app);
+  
+  // Create test product
+  const productData = generateProductData({
+    name: 'Test Product',
+    description: 'This is a test product',
+    price: 29.99,
+    category: 'Books',
+    stock: 10,
+    images: ['test-image.jpg']
+  });
+  
+  const res = await request(app)
+    .post('/api/products')
+    .set('x-auth-token', adminToken)
+    .send(productData);
+  
+  if (res.statusCode === 200) {
+    productId = res.body._id;
+    console.log('Created test product with ID:', productId);
+  }
+});
 
 // Cleanup is now handled by the global setup in jest.setup.js
 // No need for manual connection closing
@@ -18,20 +45,17 @@ describe('Product API', () => {
         .post('/api/products')
         .set('x-auth-token', adminToken)
         .send({
-          name: 'Test Product',
-          description: 'This is a test product',
+          name: 'New Test Product',
+          description: 'A test product for testing',
           price: 29.99,
-          category: 'Books',
-          stock: 10,
-          images: ['test-image.jpg']
+          category: 'Test Category',
+          stock: 100,
+          images: ['test.jpg']
         });
       
       expect(res.statusCode).toEqual(200);
       expect(res.body).toHaveProperty('_id');
-      expect(res.body.name).toEqual('Test Product');
-      
-      // Save product ID for future tests
-      productId = res.body._id;
+      expect(res.body.name).toEqual('New Test Product');
     });
     
     it('should reject product creation without auth', async () => {

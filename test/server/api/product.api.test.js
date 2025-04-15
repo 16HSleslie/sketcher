@@ -11,6 +11,13 @@ describe('Product API', () => {
   let productId;
   
 
+  // Setup before all tests
+  beforeAll(async () => {
+    // Initialize the admin token and request helper
+    adminToken = await getAdminToken(app);
+    api = createRequestHelper(app);
+  });
+
   // Add a product before tests that need an existing product
   beforeEach(async () => {
     // Create a test product only if we don't have one yet

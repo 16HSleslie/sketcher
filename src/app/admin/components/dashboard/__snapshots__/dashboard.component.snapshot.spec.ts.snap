@@ -1,0 +1,1065 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AdminDashboardComponent Snapshots should match snapshot for dashboard component 1`] = `
+<app-admin-dashboard
+  adminProfile={[Function Object]}
+  authService={[Function Object]}
+  isLoading="false"
+  orderService={[Function Object]}
+  productService={[Function Object]}
+  router={[Function Object]}
+  stats={[Function Object]}
+>
+  <div
+    class="admin-container"
+  >
+    <div
+      class="admin-sidebar"
+    >
+      <div
+        class="sidebar-header"
+      >
+        <h1>
+          Lily's Bookbinding
+        </h1>
+        <h2>
+          Admin Portal
+        </h2>
+      </div>
+      <nav
+        class="sidebar-nav"
+      >
+        <a
+          class="nav-item"
+          routerlink="/admin/dashboard"
+          routerlinkactive="active"
+        >
+          <i
+            class="nav-icon dashboard-icon"
+          />
+          <span>
+            Dashboard
+          </span>
+        </a>
+        <a
+          class="nav-item"
+          routerlink="/admin/products"
+          routerlinkactive="active"
+        >
+          <i
+            class="nav-icon products-icon"
+          />
+          <span>
+            Products
+          </span>
+        </a>
+        <a
+          class="nav-item"
+          routerlink="/admin/orders"
+          routerlinkactive="active"
+        >
+          <i
+            class="nav-icon orders-icon"
+          />
+          <span>
+            Orders
+          </span>
+        </a>
+      </nav>
+      <div
+        class="sidebar-footer"
+      >
+        <button
+          class="logout-button"
+        >
+          <i
+            class="logout-icon"
+          />
+          <span>
+            Log Out
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="admin-content"
+    >
+      <div
+        class="content-header"
+      >
+        <h1>
+          Dashboard
+        </h1>
+        <div
+          class="user-info"
+        >
+          <span>
+            Welcome, admin
+          </span>
+        </div>
+      </div>
+      <div
+        class="dashboard-content"
+      >
+        <div
+          class="stats-grid"
+        >
+          <div
+            class="stats-card"
+          >
+            <div
+              class="stats-icon products-icon"
+            />
+            <div
+              class="stats-info"
+            >
+              <h3>
+                Total Products
+              </h3>
+              <p
+                class="stats-value"
+              >
+                2
+              </p>
+            </div>
+          </div>
+          <div
+            class="stats-card"
+          >
+            <div
+              class="stats-icon orders-icon"
+            />
+            <div
+              class="stats-info"
+            >
+              <h3>
+                Total Orders
+              </h3>
+              <p
+                class="stats-value"
+              >
+                2
+              </p>
+            </div>
+          </div>
+          <div
+            class="stats-card"
+          >
+            <div
+              class="stats-icon pending-icon"
+            />
+            <div
+              class="stats-info"
+            >
+              <h3>
+                Pending Orders
+              </h3>
+              <p
+                class="stats-value"
+              >
+                1
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="dashboard-section"
+        >
+          <div
+            class="section-header"
+          >
+            <h2>
+              Recent Orders
+            </h2>
+            <a
+              class="view-all"
+              routerlink="/admin/orders"
+            >
+              View All
+            </a>
+          </div>
+          <div
+            class="table-container"
+          >
+            <table
+              class="data-table"
+            >
+              <thead>
+                <tr>
+                  <th>
+                    Order ID
+                  </th>
+                  <th>
+                    Customer
+                  </th>
+                  <th>
+                    Date
+                  </th>
+                  <th>
+                    Total
+                  </th>
+                  <th>
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    2...
+                  </td>
+                  <td>
+                    Customer 2
+                  </td>
+                  <td>
+                    Jan 2, 2023
+                  </td>
+                  <td>
+                    $150.00
+                  </td>
+                  <td>
+                    <span
+                      class="status-badge pending"
+                    >
+                       pending 
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    1...
+                  </td>
+                  <td>
+                    Customer 1
+                  </td>
+                  <td>
+                    Jan 1, 2023
+                  </td>
+                  <td>
+                    $100.00
+                  </td>
+                  <td>
+                    <span
+                      class="status-badge completed"
+                    >
+                       completed 
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div
+          class="dashboard-section"
+        >
+          <div
+            class="section-header"
+          >
+            <h2>
+              Low Stock Products
+            </h2>
+            <a
+              class="view-all"
+              routerlink="/admin/products"
+            >
+              View All
+            </a>
+          </div>
+          <div
+            class="table-container"
+          >
+            <table
+              class="data-table"
+            >
+              <thead>
+                <tr>
+                  <th>
+                    Product
+                  </th>
+                  <th>
+                    Category
+                  </th>
+                  <th>
+                    Stock
+                  </th>
+                  <th>
+                    Price
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    Product 2
+                  </td>
+                  <td>
+                    Books
+                  </td>
+                  <td>
+                    <span
+                      class="stock-badge"
+                    >
+                       3 
+                    </span>
+                  </td>
+                  <td>
+                    $150.00
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-admin-dashboard>
+`;
+
+exports[`AdminDashboardComponent Snapshots should match snapshot for dashboard with low stock warning 1`] = `
+<app-admin-dashboard
+  adminProfile={[Function Object]}
+  authService={[Function Object]}
+  isLoading="false"
+  orderService={[Function Object]}
+  productService={[Function Object]}
+  router={[Function Object]}
+  stats={[Function Object]}
+>
+  <div
+    class="admin-container"
+  >
+    <div
+      class="admin-sidebar"
+    >
+      <div
+        class="sidebar-header"
+      >
+        <h1>
+          Lily's Bookbinding
+        </h1>
+        <h2>
+          Admin Portal
+        </h2>
+      </div>
+      <nav
+        class="sidebar-nav"
+      >
+        <a
+          class="nav-item"
+          routerlink="/admin/dashboard"
+          routerlinkactive="active"
+        >
+          <i
+            class="nav-icon dashboard-icon"
+          />
+          <span>
+            Dashboard
+          </span>
+        </a>
+        <a
+          class="nav-item"
+          routerlink="/admin/products"
+          routerlinkactive="active"
+        >
+          <i
+            class="nav-icon products-icon"
+          />
+          <span>
+            Products
+          </span>
+        </a>
+        <a
+          class="nav-item"
+          routerlink="/admin/orders"
+          routerlinkactive="active"
+        >
+          <i
+            class="nav-icon orders-icon"
+          />
+          <span>
+            Orders
+          </span>
+        </a>
+      </nav>
+      <div
+        class="sidebar-footer"
+      >
+        <button
+          class="logout-button"
+        >
+          <i
+            class="logout-icon"
+          />
+          <span>
+            Log Out
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="admin-content"
+    >
+      <div
+        class="content-header"
+      >
+        <h1>
+          Dashboard
+        </h1>
+        <div
+          class="user-info"
+        >
+          <span>
+            Welcome, admin
+          </span>
+        </div>
+      </div>
+      <div
+        class="dashboard-content"
+      >
+        <div
+          class="stats-grid"
+        >
+          <div
+            class="stats-card"
+          >
+            <div
+              class="stats-icon products-icon"
+            />
+            <div
+              class="stats-info"
+            >
+              <h3>
+                Total Products
+              </h3>
+              <p
+                class="stats-value"
+              >
+                2
+              </p>
+            </div>
+          </div>
+          <div
+            class="stats-card"
+          >
+            <div
+              class="stats-icon orders-icon"
+            />
+            <div
+              class="stats-info"
+            >
+              <h3>
+                Total Orders
+              </h3>
+              <p
+                class="stats-value"
+              >
+                2
+              </p>
+            </div>
+          </div>
+          <div
+            class="stats-card"
+          >
+            <div
+              class="stats-icon pending-icon"
+            />
+            <div
+              class="stats-info"
+            >
+              <h3>
+                Pending Orders
+              </h3>
+              <p
+                class="stats-value"
+              >
+                1
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="dashboard-section"
+        >
+          <div
+            class="section-header"
+          >
+            <h2>
+              Recent Orders
+            </h2>
+            <a
+              class="view-all"
+              routerlink="/admin/orders"
+            >
+              View All
+            </a>
+          </div>
+          <div
+            class="table-container"
+          >
+            <table
+              class="data-table"
+            >
+              <thead>
+                <tr>
+                  <th>
+                    Order ID
+                  </th>
+                  <th>
+                    Customer
+                  </th>
+                  <th>
+                    Date
+                  </th>
+                  <th>
+                    Total
+                  </th>
+                  <th>
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    2...
+                  </td>
+                  <td>
+                    Customer 2
+                  </td>
+                  <td>
+                    Jan 2, 2023
+                  </td>
+                  <td>
+                    $150.00
+                  </td>
+                  <td>
+                    <span
+                      class="status-badge pending"
+                    >
+                       pending 
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    1...
+                  </td>
+                  <td>
+                    Customer 1
+                  </td>
+                  <td>
+                    Jan 1, 2023
+                  </td>
+                  <td>
+                    $100.00
+                  </td>
+                  <td>
+                    <span
+                      class="status-badge completed"
+                    >
+                       completed 
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div
+          class="dashboard-section"
+        >
+          <div
+            class="section-header"
+          >
+            <h2>
+              Low Stock Products
+            </h2>
+            <a
+              class="view-all"
+              routerlink="/admin/products"
+            >
+              View All
+            </a>
+          </div>
+          <div
+            class="table-container"
+          >
+            <table
+              class="data-table"
+            >
+              <thead>
+                <tr>
+                  <th>
+                    Product
+                  </th>
+                  <th>
+                    Category
+                  </th>
+                  <th>
+                    Stock
+                  </th>
+                  <th>
+                    Price
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    Product 2
+                  </td>
+                  <td>
+                    Books
+                  </td>
+                  <td>
+                    <span
+                      class="stock-badge critical"
+                    >
+                       1 
+                    </span>
+                  </td>
+                  <td>
+                    $150.00
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-admin-dashboard>
+`;
+
+exports[`AdminDashboardComponent Snapshots should match snapshot for dashboard with pending orders 1`] = `
+<app-admin-dashboard
+  adminProfile={[Function Object]}
+  authService={[Function Object]}
+  isLoading="false"
+  orderService={[Function Object]}
+  productService={[Function Object]}
+  router={[Function Object]}
+  stats={[Function Object]}
+>
+  <div
+    class="admin-container"
+  >
+    <div
+      class="admin-sidebar"
+    >
+      <div
+        class="sidebar-header"
+      >
+        <h1>
+          Lily's Bookbinding
+        </h1>
+        <h2>
+          Admin Portal
+        </h2>
+      </div>
+      <nav
+        class="sidebar-nav"
+      >
+        <a
+          class="nav-item"
+          routerlink="/admin/dashboard"
+          routerlinkactive="active"
+        >
+          <i
+            class="nav-icon dashboard-icon"
+          />
+          <span>
+            Dashboard
+          </span>
+        </a>
+        <a
+          class="nav-item"
+          routerlink="/admin/products"
+          routerlinkactive="active"
+        >
+          <i
+            class="nav-icon products-icon"
+          />
+          <span>
+            Products
+          </span>
+        </a>
+        <a
+          class="nav-item"
+          routerlink="/admin/orders"
+          routerlinkactive="active"
+        >
+          <i
+            class="nav-icon orders-icon"
+          />
+          <span>
+            Orders
+          </span>
+        </a>
+      </nav>
+      <div
+        class="sidebar-footer"
+      >
+        <button
+          class="logout-button"
+        >
+          <i
+            class="logout-icon"
+          />
+          <span>
+            Log Out
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="admin-content"
+    >
+      <div
+        class="content-header"
+      >
+        <h1>
+          Dashboard
+        </h1>
+        <div
+          class="user-info"
+        >
+          <span>
+            Welcome, admin
+          </span>
+        </div>
+      </div>
+      <div
+        class="dashboard-content"
+      >
+        <div
+          class="stats-grid"
+        >
+          <div
+            class="stats-card"
+          >
+            <div
+              class="stats-icon products-icon"
+            />
+            <div
+              class="stats-info"
+            >
+              <h3>
+                Total Products
+              </h3>
+              <p
+                class="stats-value"
+              >
+                2
+              </p>
+            </div>
+          </div>
+          <div
+            class="stats-card"
+          >
+            <div
+              class="stats-icon orders-icon"
+            />
+            <div
+              class="stats-info"
+            >
+              <h3>
+                Total Orders
+              </h3>
+              <p
+                class="stats-value"
+              >
+                2
+              </p>
+            </div>
+          </div>
+          <div
+            class="stats-card"
+          >
+            <div
+              class="stats-icon pending-icon"
+            />
+            <div
+              class="stats-info"
+            >
+              <h3>
+                Pending Orders
+              </h3>
+              <p
+                class="stats-value"
+              >
+                5
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="dashboard-section"
+        >
+          <div
+            class="section-header"
+          >
+            <h2>
+              Recent Orders
+            </h2>
+            <a
+              class="view-all"
+              routerlink="/admin/orders"
+            >
+              View All
+            </a>
+          </div>
+          <div
+            class="table-container"
+          >
+            <table
+              class="data-table"
+            >
+              <thead>
+                <tr>
+                  <th>
+                    Order ID
+                  </th>
+                  <th>
+                    Customer
+                  </th>
+                  <th>
+                    Date
+                  </th>
+                  <th>
+                    Total
+                  </th>
+                  <th>
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    2...
+                  </td>
+                  <td>
+                    Customer 2
+                  </td>
+                  <td>
+                    Jan 2, 2023
+                  </td>
+                  <td>
+                    $150.00
+                  </td>
+                  <td>
+                    <span
+                      class="status-badge pending"
+                    >
+                       pending 
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    1...
+                  </td>
+                  <td>
+                    Customer 1
+                  </td>
+                  <td>
+                    Jan 1, 2023
+                  </td>
+                  <td>
+                    $100.00
+                  </td>
+                  <td>
+                    <span
+                      class="status-badge completed"
+                    >
+                       completed 
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div
+          class="dashboard-section"
+        >
+          <div
+            class="section-header"
+          >
+            <h2>
+              Low Stock Products
+            </h2>
+            <a
+              class="view-all"
+              routerlink="/admin/products"
+            >
+              View All
+            </a>
+          </div>
+          <div
+            class="table-container"
+          >
+            <table
+              class="data-table"
+            >
+              <thead>
+                <tr>
+                  <th>
+                    Product
+                  </th>
+                  <th>
+                    Category
+                  </th>
+                  <th>
+                    Stock
+                  </th>
+                  <th>
+                    Price
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    Product 2
+                  </td>
+                  <td>
+                    Books
+                  </td>
+                  <td>
+                    <span
+                      class="stock-badge"
+                    >
+                       3 
+                    </span>
+                  </td>
+                  <td>
+                    $150.00
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</app-admin-dashboard>
+`;
+
+exports[`AdminDashboardComponent Snapshots should match snapshot for loading state 1`] = `
+<app-admin-dashboard
+  adminProfile={[Function Object]}
+  authService={[Function Object]}
+  isLoading={[Function Boolean]}
+  orderService={[Function Object]}
+  productService={[Function Object]}
+  router={[Function Object]}
+  stats={[Function Object]}
+>
+  <div
+    class="admin-container"
+  >
+    <div
+      class="admin-sidebar"
+    >
+      <div
+        class="sidebar-header"
+      >
+        <h1>
+          Lily's Bookbinding
+        </h1>
+        <h2>
+          Admin Portal
+        </h2>
+      </div>
+      <nav
+        class="sidebar-nav"
+      >
+        <a
+          class="nav-item"
+          routerlink="/admin/dashboard"
+          routerlinkactive="active"
+        >
+          <i
+            class="nav-icon dashboard-icon"
+          />
+          <span>
+            Dashboard
+          </span>
+        </a>
+        <a
+          class="nav-item"
+          routerlink="/admin/products"
+          routerlinkactive="active"
+        >
+          <i
+            class="nav-icon products-icon"
+          />
+          <span>
+            Products
+          </span>
+        </a>
+        <a
+          class="nav-item"
+          routerlink="/admin/orders"
+          routerlinkactive="active"
+        >
+          <i
+            class="nav-icon orders-icon"
+          />
+          <span>
+            Orders
+          </span>
+        </a>
+      </nav>
+      <div
+        class="sidebar-footer"
+      >
+        <button
+          class="logout-button"
+        >
+          <i
+            class="logout-icon"
+          />
+          <span>
+            Log Out
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="admin-content"
+    >
+      <div
+        class="content-header"
+      >
+        <h1>
+          Dashboard
+        </h1>
+        <div
+          class="user-info"
+        >
+          <span>
+            Welcome, admin
+          </span>
+        </div>
+      </div>
+      <div
+        class="loading-state"
+      >
+        <div
+          class="spinner"
+        />
+        <p>
+          Loading dashboard data...
+        </p>
+      </div>
+    </div>
+  </div>
+</app-admin-dashboard>
+`;
