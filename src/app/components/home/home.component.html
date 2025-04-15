@@ -1,6 +1,6 @@
 <div class="homepage-container">
   <!-- Hero Section -->
-  <section class="hero">
+  <section class="hero" [ngClass]="{'fallback-background': bannerError}" [ngStyle]="{'background-image': !bannerError ? 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(' + bannerUrl + ')' : ''}">
     <div class="hero-content">
       <h1>Lily's Bookbinding</h1>
       <p class="tagline">Handcrafted books with rustic enchantment</p>

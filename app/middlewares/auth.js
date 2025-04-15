@@ -14,12 +14,8 @@ module.exports = function(req, res, next) {
     return res.status(401).json({ msg: 'No token, authorization denied' });
   }
 
-  // Reject clearly invalid tokens
-  if (token === 'admin-token-1744601683242' || token.startsWith('admin-token-')) {
-    console.log('Auth failed: Using invalid hardcoded token');
-    return res.status(401).json({ msg: 'Invalid token format' });
-  }
-
+  // Remove token rejection to allow all tokens to be verified
+  
   try {
     // Verify token
     const decoded = jwt.verify(token, config.JWT_SECRET);

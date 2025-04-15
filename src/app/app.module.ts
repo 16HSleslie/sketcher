@@ -13,6 +13,7 @@ import { HomeComponent } from './components/home/home.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { UploadComponent } from './components/upload/upload.component';
+import { AssetService } from './services/asset.service';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -37,7 +38,8 @@ const routes: Routes = [
     RouterModule.forRoot(routes)
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    AssetService
   ],
   bootstrap: [AppComponent]
 })

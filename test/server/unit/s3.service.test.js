@@ -1,23 +1,24 @@
-const AWS = require('aws-sdk');
-const { uploadToS3, getFileFromS3, deleteFileFromS3, listFilesInFolder, getSignedUrl } = require('../../../app/services/s3.service');
+const { S3Client, GetObjectCommand, DeleteObjectCommand, ListObjectsCommand } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const { uploadToS3, getFileFromS3, deleteFileFromS3, listFilesInFolder, createSignedUrl } = require('../../../app/services/s3.service');
 
-// Mock AWS S3
-jest.mock('aws-sdk', () => {
-  const mockS3Instance = {
-    getObject: jest.fn().mockReturnThis(),
-    deleteObject: jest.fn().mockReturnThis(),
-    listObjects: jest.fn().mockReturnThis(),
-    getSignedUrl: jest.fn(),
-    promise: jest.fn()
-  };
-  
+// Mock AWS S3 Client
+jest.mock('@aws-sdk/client-s3', () => {
+  const mockSend = jest.fn();
   return {
-    S3: jest.fn(() => mockS3Instance),
-    config: {
-      update: jest.fn()
-    }
+    S3Client: jest.fn(() => ({
+      send: mockSend
+    })),
+    GetObjectCommand: jest.fn(),
+    DeleteObjectCommand: jest.fn(),
+    ListObjectsCommand: jest.fn()
   };
 });
+
+// Mock S3 Request Presigner
+jest.mock('@aws-sdk/s3-request-presigner', () => ({
+  getSignedUrl: jest.fn()
+}));
 
 // Mock multer and multer-s3
 jest.mock('multer', () => {
@@ -31,11 +32,11 @@ jest.mock('multer-s3', () => {
 });
 
 describe('S3 Service', () => {
-  let s3Instance;
+  let s3Client;
   
   beforeEach(() => {
-    // Get the mocked S3 instance
-    s3Instance = new AWS.S3();
+    // Get the mocked S3 client
+    s3Client = new S3Client();
     
     // Clear all mocks before each test
     jest.clearAllMocks();
@@ -50,13 +51,13 @@ describe('S3 Service', () => {
         ContentLength: 1024
       };
       
-      s3Instance.promise.mockResolvedValue(mockResponse);
+      s3Client.send.mockResolvedValue(mockResponse);
       
       // Call the function
       const result = await getFileFromS3('test-key');
       
       // Check S3 was called with correct parameters
-      expect(s3Instance.getObject).toHaveBeenCalledWith({
+      expect(GetObjectCommand).toHaveBeenCalledWith({
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: 'test-key'
       });
@@ -67,7 +68,7 @@ describe('S3 Service', () => {
     
     it('should throw an error when S3 getObject fails', async () => {
       // Mock error response
-      s3Instance.promise.mockRejectedValue(new Error('S3 error'));
+      s3Client.send.mockRejectedValue(new Error('S3 error'));
       
       // Call the function and expect it to throw
       await expect(getFileFromS3('test-key')).rejects.toThrow('Failed to get file from S3: S3 error');
@@ -77,13 +78,13 @@ describe('S3 Service', () => {
   describe('deleteFileFromS3', () => {
     it('should delete a file from S3 successfully', async () => {
       // Mock successful response
-      s3Instance.promise.mockResolvedValue({ DeleteMarker: true });
+      s3Client.send.mockResolvedValue({ DeleteMarker: true });
       
       // Call the function
       const result = await deleteFileFromS3('test-key');
       
       // Check S3 was called with correct parameters
-      expect(s3Instance.deleteObject).toHaveBeenCalledWith({
+      expect(DeleteObjectCommand).toHaveBeenCalledWith({
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: 'test-key'
       });
@@ -94,7 +95,7 @@ describe('S3 Service', () => {
     
     it('should throw an error when S3 deleteObject fails', async () => {
       // Mock error response
-      s3Instance.promise.mockRejectedValue(new Error('S3 error'));
+      s3Client.send.mockRejectedValue(new Error('S3 error'));
       
       // Call the function and expect it to throw
       await expect(deleteFileFromS3('test-key')).rejects.toThrow('Failed to delete file from S3: S3 error');
@@ -111,13 +112,13 @@ describe('S3 Service', () => {
         ]
       };
       
-      s3Instance.promise.mockResolvedValue(mockResponse);
+      s3Client.send.mockResolvedValue(mockResponse);
       
       // Call the function
       const result = await listFilesInFolder('books');
       
       // Check S3 was called with correct parameters
-      expect(s3Instance.listObjects).toHaveBeenCalledWith({
+      expect(ListObjectsCommand).toHaveBeenCalledWith({
         Bucket: process.env.AWS_BUCKET_NAME,
         Prefix: 'books/'
       });
@@ -128,30 +129,37 @@ describe('S3 Service', () => {
     
     it('should throw an error when S3 listObjects fails', async () => {
       // Mock error response
-      s3Instance.promise.mockRejectedValue(new Error('S3 error'));
+      s3Client.send.mockRejectedValue(new Error('S3 error'));
       
       // Call the function and expect it to throw
       await expect(listFilesInFolder('books')).rejects.toThrow('Failed to list files from S3: S3 error');
     });
   });
   
-  describe('getSignedUrl', () => {
-    it('should return a signed URL', () => {
+  describe('createSignedUrl', () => {
+    it('should return a signed URL', async () => {
       // Mock the getSignedUrl method
-      s3Instance.getSignedUrl.mockReturnValue('https://example-signed-url.com');
+      getSignedUrl.mockResolvedValue('https://example-signed-url.com');
       
       // Call the function
-      const result = getSignedUrl('test-key', 120);
+      const result = await createSignedUrl('test-key', 120);
       
-      // Check S3 was called with correct parameters
-      expect(s3Instance.getSignedUrl).toHaveBeenCalledWith('getObject', {
+      // Check GetObjectCommand was called with correct parameters
+      expect(GetObjectCommand).toHaveBeenCalledWith({
         Bucket: process.env.AWS_BUCKET_NAME,
-        Key: 'test-key',
-        Expires: 120
+        Key: 'test-key'
       });
       
       // Verify the result
       expect(result).toBe('https://example-signed-url.com');
+    });
+    
+    it('should throw an error when generating signed URL fails', async () => {
+      // Mock error response
+      getSignedUrl.mockRejectedValue(new Error('URL generation error'));
+      
+      // Call the function and expect it to throw
+      await expect(createSignedUrl('test-key')).rejects.toThrow('Failed to generate signed URL: URL generation error');
     });
   });
   

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="logo">
       <a routerLink="/">
-        <img src="assets/images/lily-logo.png" alt="Lily's Bookbinding">
+        <img *ngIf="logoUrl" [src]="logoUrl" alt="Lily's Bookbinding" (error)="handleImageError('logo')">
         <span>Lily's Bookbinding</span>
       </a>
     </div>

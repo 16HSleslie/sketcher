@@ -16,7 +16,6 @@ section {
 
 /* Hero Section */
 .hero {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/assets/images/hero-background.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -24,6 +23,24 @@ section {
   text-align: center;
   padding: 8rem 2rem;
   position: relative;
+}
+
+/* Fallback style when banner image fails to load */
+.fallback-background {
+  background: linear-gradient(135deg, #4a321e 0%, #7b5d4f 50%, #614940 100%);
+  animation: gradient-shift 15s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .hero-content {

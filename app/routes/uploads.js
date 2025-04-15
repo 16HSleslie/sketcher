@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { uploadToS3, getFileFromS3, deleteFileFromS3, listFilesInFolder, getSignedUrl } = require('../services/s3.service');
+const { uploadToS3, getFileFromS3, deleteFileFromS3, listFilesInFolder, createSignedUrl } = require('../services/s3.service');
 const auth = require('../middlewares/auth');
 
 /**
@@ -11,8 +11,16 @@ const auth = require('../middlewares/auth');
 router.post('/', auth, uploadToS3().single('image'), async (req, res) => {
   try {
     if (!req.file) {
+      console.error('No file received in request');
       return res.status(400).json({ message: 'No file uploaded' });
     }
+
+    console.log('File uploaded successfully:', {
+      key: req.file.key,
+      location: req.file.location,
+      bucket: req.file.bucket,
+      size: req.file.size
+    });
 
     // Return the file info
     res.status(201).json({
@@ -27,7 +35,7 @@ router.post('/', auth, uploadToS3().single('image'), async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Upload error:', error);
+    console.error('Upload error details:', error);
     res.status(500).json({ message: 'Server error during upload', error: error.message });
   }
 });
@@ -90,11 +98,11 @@ router.get('/:key', auth, async (req, res) => {
  * @desc Get a signed URL for a file
  * @access Private
  */
-router.get('/signed/:key', auth, (req, res) => {
+router.get('/signed/:key', auth, async (req, res) => {
   try {
     const key = req.params.key;
     const expires = req.query.expires ? parseInt(req.query.expires) : 60;
-    const url = getSignedUrl(key, expires);
+    const url = await createSignedUrl(key, expires);
     
     res.json({ url });
   } catch (error) {

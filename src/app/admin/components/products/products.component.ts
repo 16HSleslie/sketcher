@@ -277,11 +277,19 @@ export class AdminProductsComponent implements OnInit {
     }
     
     this.uploading = true;
+    console.log('Starting image upload:', file.name);
     
     // Upload the file to S3
     this.uploadService.uploadFile(file).subscribe({
       next: (response) => {
         this.uploading = false;
+        console.log('Image upload successful:', response);
+        
+        if (!response.file || !response.file.location) {
+          console.error('Upload response missing file location:', response);
+          alert('Upload completed but image URL is missing. Please try again or contact support.');
+          return;
+        }
         
         // Add the S3 location URL to the form
         const currentImages = this.productForm.get('images')?.value || [];
@@ -290,13 +298,16 @@ export class AdminProductsComponent implements OnInit {
         // Add image to preview
         this.imagePreviewUrls.push(response.file.location);
         
+        // Show success message
+        alert(`Image "${file.name}" uploaded successfully!`);
+        
         // Clear the file input
         input.value = '';
       },
       error: (error) => {
         this.uploading = false;
         console.error('Error uploading image:', error);
-        alert('Failed to upload image. Please try again.');
+        alert('Failed to upload image: ' + (error.message || 'Unknown error'));
         
         // Clear the file input
         input.value = '';

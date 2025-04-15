@@ -8,6 +8,7 @@
     "server": "nodemon server.js",
     "client": "ng serve --proxy-config proxy.conf.json",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "restart": "pkill -f \"node server.js\" || true && pkill -f \"ng serve\" || true && npm run dev",
     "build": "ng build --prod",
     "test": "cross-env SUPPRESS_JEST_WARNINGS=1 jest --config jest-node.config.js --testPathPattern=test/server --runInBand",
     "test:all": "cross-env SUPPRESS_JEST_WARNINGS=1 jest",
@@ -24,7 +25,8 @@
     "cypress:install": "cypress install",
     "test:performance": "node performance-tests.js",
     "test:visual": "percy exec -- cypress run --spec 'cypress/e2e/admin/visual.cy.ts'",
-    "test:snapshot": "cross-env SUPPRESS_JEST_WARNINGS=1 jest --testMatch '**/src/app/admin/**/*.snapshot.spec.ts'"
+    "test:snapshot": "cross-env SUPPRESS_JEST_WARNINGS=1 jest --testMatch '**/src/app/admin/**/*.snapshot.spec.ts'",
+    "lint": "ng lint"
   },
   "keywords": [
     "mongodb",
@@ -44,7 +46,8 @@
     "@angular/platform-browser": "^16.2.0",
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
-    "aws-sdk": "^2.1692.0",
+    "@aws-sdk/client-s3": "^3.500.0",
+    "@aws-sdk/s3-request-presigner": "^3.500.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
@@ -65,11 +68,13 @@
     "@angular/compiler-cli": "^16.2.0",
     "@types/jasmine": "~4.3.0",
     "@types/jest": "^29.5.14",
+    "angular-eslint": "19.3.0",
     "chrome-launcher": "^1.0.0",
     "concurrently": "^8.2.1",
     "cross-env": "^7.0.3",
     "cypress": "^13.7.0",
     "esbuild": "^0.25.2",
+    "eslint": "^9.23.0",
     "jasmine-core": "~4.6.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
@@ -86,6 +91,7 @@
     "start-server-and-test": "^2.0.0",
     "supertest": "^7.1.0",
     "ts-jest": "^29.3.2",
-    "typescript": "~5.1.3"
+    "typescript": "~5.1.3",
+    "typescript-eslint": "8.27.0"
   }
 }

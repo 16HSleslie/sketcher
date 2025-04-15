@@ -8,7 +8,11 @@ const config = require('./config');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Origin', 'x-auth-token']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

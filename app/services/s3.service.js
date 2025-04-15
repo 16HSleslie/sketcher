@@ -1,18 +1,19 @@
-const AWS = require('aws-sdk');
+const { S3Client, GetObjectCommand, DeleteObjectCommand, ListObjectsCommand, GetObjectCommandInput } = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 
-// Configure AWS with credentials from environment variables
-AWS.config.update({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION
+// Create S3 client instance
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  }
 });
 
-// Create S3 service instance
-const s3 = new AWS.S3();
 const bucketName = process.env.AWS_BUCKET_NAME;
 
 /**
@@ -23,9 +24,8 @@ const bucketName = process.env.AWS_BUCKET_NAME;
 const uploadToS3 = (folderName = 'books') => {
   return multer({
     storage: multerS3({
-      s3: s3,
+      s3: s3Client,
       bucket: bucketName,
-      acl: 'public-read',
       metadata: function (req, file, cb) {
         cb(null, { fieldName: file.fieldname });
       },
@@ -33,7 +33,8 @@ const uploadToS3 = (folderName = 'books') => {
         const fileExtension = path.extname(file.originalname);
         const fileName = `${folderName}/${uuidv4()}${fileExtension}`;
         cb(null, fileName);
-      }
+      },
+      contentType: multerS3.AUTO_CONTENT_TYPE
     }),
     limits: { fileSize: 5 * 1024 * 1024 }, // 5MB file size limit
     fileFilter: (req, file, cb) => {
@@ -52,14 +53,14 @@ const uploadToS3 = (folderName = 'books') => {
  * @returns {Promise<object>} - S3 object data
  */
 const getFileFromS3 = async (key) => {
-  const params = {
+  const command = new GetObjectCommand({
     Bucket: bucketName,
     Key: key
-  };
+  });
 
   try {
-    const data = await s3.getObject(params).promise();
-    return data;
+    const response = await s3Client.send(command);
+    return response;
   } catch (error) {
     throw new Error(`Failed to get file from S3: ${error.message}`);
   }
@@ -71,14 +72,14 @@ const getFileFromS3 = async (key) => {
  * @returns {Promise<object>} - Deletion result
  */
 const deleteFileFromS3 = async (key) => {
-  const params = {
+  const command = new DeleteObjectCommand({
     Bucket: bucketName,
     Key: key
-  };
+  });
 
   try {
-    const data = await s3.deleteObject(params).promise();
-    return data;
+    const response = await s3Client.send(command);
+    return response;
   } catch (error) {
     throw new Error(`Failed to delete file from S3: ${error.message}`);
   }
@@ -90,14 +91,14 @@ const deleteFileFromS3 = async (key) => {
  * @returns {Promise<Array>} - Array of file objects
  */
 const listFilesInFolder = async (folderName = 'books') => {
-  const params = {
+  const command = new ListObjectsCommand({
     Bucket: bucketName,
     Prefix: `${folderName}/`
-  };
+  });
 
   try {
-    const data = await s3.listObjects(params).promise();
-    return data.Contents;
+    const response = await s3Client.send(command);
+    return response.Contents;
   } catch (error) {
     throw new Error(`Failed to list files from S3: ${error.message}`);
   }
@@ -109,14 +110,17 @@ const listFilesInFolder = async (folderName = 'books') => {
  * @param {number} expires - Expiration time in seconds (default 60)
  * @returns {string} - Signed URL
  */
-const getSignedUrl = (key, expires = 60) => {
-  const params = {
+const createSignedUrl = async (key, expires = 60) => {
+  const command = new GetObjectCommand({
     Bucket: bucketName,
-    Key: key,
-    Expires: expires
-  };
+    Key: key
+  });
 
-  return s3.getSignedUrl('getObject', params);
+  try {
+    return await getSignedUrl(s3Client, command, { expiresIn: expires });
+  } catch (error) {
+    throw new Error(`Failed to generate signed URL: ${error.message}`);
+  }
 };
 
 module.exports = {
@@ -124,5 +128,5 @@ module.exports = {
   getFileFromS3,
   deleteFileFromS3,
   listFilesInFolder,
-  getSignedUrl
+  createSignedUrl
 }; 
