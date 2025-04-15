@@ -9,46 +9,8 @@ let adminToken;
 let productId;
 let orderId;
 
-// Setup and teardown
-beforeAll(async () => {
-  // Ensure any existing admin is removed
-  await Admin.deleteMany({});
-  
-  // Register admin and get token for authenticated routes
-  const adminResponse = await request(app)
-    .post('/api/admin/register')
-    .send({
-      username: 'orderadmin',
-      email: 'orderadmin@example.com',
-      password: 'password123'
-    });
-  
-  adminToken = adminResponse.body.token;
-  
-  // Create a test product for orders
-  const productRes = await request(app)
-    .post('/api/products')
-    .set('x-auth-token', adminToken)
-    .send({
-      name: 'Order Test Product',
-      description: 'Product for order tests',
-      price: 49.99,
-      category: 'Test Category',
-      stock: 20
-    });
-    
-  productId = productRes.body._id;
-});
-
-afterAll(async () => {
-  // Clean up test data
-  await Order.deleteMany({});
-  await Product.deleteMany({});
-  await Admin.deleteMany({});
-  
-  // Close mongoose connection
-  await mongoose.connection.close();
-});
+// Cleanup is now handled by the global setup in jest.setup.js
+// No need for manual connection closing
 
 // Order tests
 describe('Order API', () => {

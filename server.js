@@ -12,10 +12,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB Connection
-mongoose.connect(config.MONGO_URI)
-  .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log('MongoDB Connection Error:', err));
+// MongoDB Connection - Only connect if not being required for tests
+if (!module.parent) {
+  mongoose.connect(config.MONGO_URI)
+    .then(() => console.log('MongoDB Connected'))
+    .catch(err => console.log('MongoDB Connection Error:', err));
+}
 
 // Routes
 app.use('/api/users', require('./app/routes/users'));

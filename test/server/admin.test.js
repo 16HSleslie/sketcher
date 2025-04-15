@@ -6,18 +6,8 @@ const Admin = require('../../app/models/Admin');
 let adminToken;
 let adminId;
 
-beforeAll(async () => {
-  // Ensure any existing admin is removed
-  await Admin.deleteMany({});
-});
-
-afterAll(async () => {
-  // Clean up test data
-  await Admin.deleteMany({});
-  
-  // Close mongoose connection
-  await mongoose.connection.close();
-});
+// Cleanup is now handled by the global setup in jest.setup.js
+// No need for manual connection closing
 
 // Admin authentication tests
 describe('Admin Authentication', () => {

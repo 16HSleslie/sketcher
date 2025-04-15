@@ -6,27 +6,9 @@ const Product = require('../../app/models/Product');
 let adminToken;
 let productId;
 
-// Setup and teardown
-beforeAll(async () => {
-  // Register admin and get token for authenticated routes
-  const adminResponse = await request(app)
-    .post('/api/admin/register')
-    .send({
-      username: 'testadmin',
-      email: 'testadmin@example.com',
-      password: 'password123'
-    });
-  
-  adminToken = adminResponse.body.token;
-});
 
-afterAll(async () => {
-  // Clean up test data
-  await Product.deleteMany({});
-  
-  // Close mongoose connection
-  await mongoose.connection.close();
-});
+// Cleanup is now handled by the global setup in jest.setup.js
+// No need for manual connection closing
 
 // Product tests
 describe('Product API', () => {
